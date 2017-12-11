@@ -1,5 +1,7 @@
 import base64
 import os
+import hashlib
+import hmac
 from flask import render_template
 from flask import Flask, jsonify, request, make_response, send_from_directory
 from werkzeug.utils import secure_filename
@@ -82,6 +84,11 @@ def get_data():
     db_util.set_users(now_users)
     return jsonify(db_util.get_data())
 
+@app.route("/getAppClicks")
+@allow_cross_domain
+def get_app_clicks():
+    pass
+
 
 @app.route("/")
 @allow_cross_domain
@@ -92,6 +99,8 @@ def hello():
     afterClicks_web=int(nowClicks_web)+1
     db_util.set_clicks_web(str(afterClicks_web))
     return  render_template('index.html')
+
+
 
 
 if __name__ == '__main__':
