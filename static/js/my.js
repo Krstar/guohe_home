@@ -14,7 +14,8 @@ $(function () {
             $("#downloads").attr('data-to',downloads)
         },
         error:function () {
-            alert("服务器异常")
+            alert("获取基本数据异常")
         }
     })
+
 })

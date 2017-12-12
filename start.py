@@ -1,7 +1,9 @@
 import base64
 import os
 import hashlib
+import requests
 import hmac
+import json
 from flask import render_template
 from flask import Flask, jsonify, request, make_response, send_from_directory
 from werkzeug.utils import secure_filename
@@ -84,10 +86,22 @@ def get_data():
     db_util.set_users(now_users)
     return jsonify(db_util.get_data())
 
-@app.route("/getAppClicks")
-@allow_cross_domain
-def get_app_clicks():
-    pass
+# @app.route("/getAppClicks")
+# @allow_cross_domain
+# def get_app_clicks():
+#     token = 'A28UBH2TE8IT&'
+#     data = 'GET&%2Fctr_user_basic%2Fget_realtime_data&app_id%3D3103264374%26end_date%3D2017-11-11%26idx%3D10103%26start_date%3D2017-11-10'
+#     data = data.replace('~', '%7E').encode('utf-8')
+#     token = token.replace('-_', '+/').encode('utf-8')
+#
+#     m = hmac.new(token, data, hashlib.sha1)
+#
+#     data = hashlib.md5(m.hexdigest().encode('utf-8'))
+#     sign=data.hexdigest()
+#     result=requests.get("http://openapi.mta.qq.com/ctr_user_basic/get_realtime_data?app_id=3103264374&start_date=2017-11-10&end_date=2017-11-11&idx=10103&sign="+sign)
+#     print(result.text)
+#     return jsonify(result.text)
+
 
 
 @app.route("/")
@@ -95,9 +109,29 @@ def get_app_clicks():
 def hello():
     web_datas=db_util.get_data()
     nowClicks_web=web_datas['clicks_web']
-    print(nowClicks_web)
+    print('web总点击量'+nowClicks_web)
     afterClicks_web=int(nowClicks_web)+1
     db_util.set_clicks_web(str(afterClicks_web))
+
+    #获取App实时点击量
+    token = 'A28UBH2TE8IT&'
+    data = 'GET&%2Fctr_user_basic%2Fget_realtime_data&app_id%3D3103264374%26end_date%3D2017-11-11%26idx%3D10103%26start_date%3D2017-11-10'
+    data = data.replace('~', '%7E').encode('utf-8')
+    token = token.replace('-_', '+/').encode('utf-8')
+
+    m = hmac.new(token, data, hashlib.sha1)
+
+    data = hashlib.md5(m.hexdigest().encode('utf-8'))
+    sign = data.hexdigest()
+    result = requests.get(
+        "http://openapi.mta.qq.com/ctr_user_basic/get_realtime_data?app_id=3103264374&start_date=2017-11-10&end_date=2017-11-11&idx=10103&sign=" + sign)
+
+    app_click_data = result.json()
+    print(app_click_data)
+    clicks=app_click_data['ret_data']['SessionCount']
+    print('App实时启动量'+clicks)
+    db_util.set_clicks_app(clicks)
+
     return  render_template('index.html')
 
 
