@@ -1,5 +1,5 @@
 import pymysql
-from util import response_info
+
 # 打开数据库连接
 
 # 使用cursor()方法获取操作游标
@@ -44,6 +44,7 @@ def update_download_apk_info(download_info):
     try:
         cursor.execute(sql,(download_info['appname'],download_info['serverVersion'],download_info['serverFlag'],download_info['lastForce'],'http://106.14.220.63/apk/download/guohe',download_info['updateinfo'],))
         db.commit()
+        from guohe_home.util import response_info
         return response_info.success('更新成功', download_info)
     except:
         db.rollback()

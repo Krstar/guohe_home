@@ -8,7 +8,9 @@ from flask import render_template
 from flask import Flask, jsonify, request, make_response, send_from_directory
 from werkzeug.utils import secure_filename
 from functools import wraps
+
 from util import response_info, db_util
+
 app = Flask(__name__)
 UPLOAD_FOLDER='/var/www/apk'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -54,7 +56,7 @@ def download_file(filename):
     #新增下载次数
     web_data=db_util.get_data()
     nowDownloads=web_data['downloads']
-    db_util.set_downloads(nowDownloads+1)
+    db_util.set_downloads(int(nowDownloads)+1)
 
     return send_from_directory(directory, new_fileName, as_attachment=True)
 @app.route('/apk/upload',methods=['POST'],strict_slashes=False)
