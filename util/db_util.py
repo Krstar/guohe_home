@@ -42,7 +42,7 @@ def update_download_apk_info(download_info):
     cursor = db.cursor()
     sql = "insert into apk(appname,serverVersion,serverFlag,lastForce,updateurl,updateinfo) values(%s,%s,%s,%s,%s,%s)"
     try:
-        cursor.execute(sql,(download_info['appname'],download_info['serverVersion'],download_info['serverFlag'],download_info['lastForce'],'http://123.207.182.24/apk/download/guohe',download_info['updateinfo'],))
+        cursor.execute(sql,(download_info['appname'],download_info['serverVersion'],download_info['serverFlag'],download_info['lastForce'],'http://106.14.220.63/apk/download/guohe',download_info['updateinfo'],))
         db.commit()
         return response_info.success('更新成功', download_info)
     except:
