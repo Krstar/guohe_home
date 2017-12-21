@@ -49,16 +49,19 @@ def download_apk_info():
 @allow_cross_domain
 def download_file(filename):
     # 需要知道2个参数, 第1个参数是本地目录的path, 第2个参数是文件名(带扩展名)
+    print("进入接口")
     directory = r'/var/www/apk'
     data = db_util.get_download_apk_info()
+    print(data)
     serverVersion=data['info']['serverVersion']
     new_fileName=filename+serverVersion+r'.apk'
+    print(new_fileName)
     #新增下载次数
     web_data=db_util.get_data()
     nowDownloads=web_data['downloads']
     db_util.set_downloads(int(nowDownloads)+1)
-
     return send_from_directory(directory, new_fileName, as_attachment=True)
+
 @app.route('/apk/upload',methods=['POST'],strict_slashes=False)
 @allow_cross_domain
 def upload():
