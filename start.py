@@ -89,7 +89,12 @@ def app_download_info_update():
 def get_data():
     now_users=db_util.get_pxc_users()
     db_util.set_users(now_users)
-    return jsonify(db_util.get_data())
+    app_version=db_util.get_download_apk_info()
+
+    data=db_util.get_data()
+    data['app_version']=app_version['info']['serverVersion']
+    print(data)
+    return jsonify(data)
 
 # @app.route("/getAppClicks")
 # @allow_cross_domain
@@ -112,6 +117,7 @@ def get_data():
 @app.route("/")
 @allow_cross_domain
 def hello():
+
     web_datas=db_util.get_data()
     nowClicks_web=web_datas['clicks_web']
     print('web总点击量'+nowClicks_web)
